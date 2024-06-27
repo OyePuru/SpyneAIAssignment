@@ -21,7 +21,7 @@ const schema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export const User = mongoose.model<Document & User>('User', schema);
+export const User = mongoose.model<Document & User>('user', schema);
 
 export interface User extends Document {
   name: string;
