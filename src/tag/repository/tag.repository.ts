@@ -15,4 +15,8 @@ export class TagRepository {
       $inc: { timeUsed: 1 }
     }, { new: true }).exec();
   }
+
+  findTagByTagIds = async (ids: any[]) => {
+    return await Tag.find({ _id: { $in: ids }}).exec();
+  }
 }
