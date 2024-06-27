@@ -17,6 +17,20 @@ const schema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'tag'
 	}],
+  viewCount: {
+    type: Number,
+    default: 0,
+  },
+  likesCount: {
+    type: Number,
+    default: 0
+  },
+  comments : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : 'comment'
+    }
+  ]
 }, { timestamps: true });
 
 export const Discussion = mongoose.model<Document & Discussion>('discussion', schema);
