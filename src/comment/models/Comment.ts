@@ -7,11 +7,11 @@ const schema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'user'
   },
-  post: {
+  discussion: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post'
+    ref: 'discussion'
   }
 }, { timestamps: true });
 
@@ -20,7 +20,7 @@ export const Comment = mongoose.model<Document & Comment>('comment', schema);
 export interface Comment extends Document {
   content: string;
   user: mongoose.Schema.Types.ObjectId;
-  post: mongoose.Schema.Types.ObjectId;
+  discussion: mongoose.Schema.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

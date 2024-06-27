@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { IDiscussion } from "../interface/discussion.interface";
 import { Discussion } from "../models/Discussion"
+import { Comment } from "../../comment/models/Comment";
 
 export class DiscussionRepository {
   create = async (discussion: IDiscussion) => {
@@ -124,5 +125,17 @@ export class DiscussionRepository {
       }
     ]).exec();
     return response[0];
+  }
+
+  findById = async (id: any) => {
+    return Discussion.findById(id).exec();
+  }
+
+  addComments = async (discussionId: any, comment: Comment) => {
+    await Discussion.findByIdAndUpdate(discussionId, {
+      $push: {
+        comments: comment._id
+      }
+    }).exec();
   }
 }
