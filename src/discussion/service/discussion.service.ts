@@ -117,14 +117,19 @@ export class DiscussionService {
   }
 
   delete = async (discussionId: any, userId: any) => {
-    const discussion = await this.discussionRepository.findOneByUser(userId, discussionId);
-    if (!discussion) {
-      return Promise.reject({ err_code: 400, message: "discussion not found!"});
+    try {
+      const discussion = await this.discussionRepository.findOneByUser(userId, discussionId);
+      if (!discussion) {
+        return Promise.reject({ err_code: 400, message: "discussion not found!" });
+      }
+      if (discussion.media) {
+        await this.mediaRepository.deleteById(discussion.media)
+      }
+      await this.discussionRepository.deleteById(discussion.id);
+    } catch (err: any) {
+      console.error(err);
+      return Promise.reject({ message: err.message });
     }
-    if (discussion.media) {
-      await this.mediaRepository.deleteById(discussion.media)
-    }
-    await this.discussionRepository.deleteById(discussion.id);
   }
 
   getDiscussionsByTagId = async (tagId: string) => {
@@ -132,10 +137,23 @@ export class DiscussionService {
   }
 
   getDiscussionsBySearching = async (body: any) => {
-    const searchKey = body.search as string;
-    if (!searchKey || searchKey.length < 3) {
-      return Promise.reject({ err_code: 400, message: "Search key exist or contain atleast 3 characters." });
+    try {
+      const searchKey = body.search as string;
+      if (!searchKey || searchKey.length < 3) {
+        return Promise.reject({ err_code: 400, message: "Search key exist or contain atleast 3 characters." });
+      }
+      return await this.discussionRepository.getDiscussionsBySearching(searchKey);
+    } catch (err: any) {
+      console.error(err);
+      return Promise.reject({ message: err.message });
     }
-    return await this.discussionRepository.getDiscussionsBySearching(searchKey);
+  }
+
+  likeDiscussion = async (discussionId: string) => {
+    return await this.discussionRepository.likeDiscussion(discussionId);
+  }
+
+  incrementViewCountInDiscussion = async (discussionId: string) => {
+    return await this.discussionRepository.incrementViewCountInDiscussion(discussionId);
   }
 }

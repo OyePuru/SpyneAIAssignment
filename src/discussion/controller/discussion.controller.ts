@@ -62,7 +62,7 @@ export class DiscussionController {
   }
 
 
-  getDiscussionBySearching= async (req: AuthenticatedRequest, res: Response) => {
+  getDiscussionBySearching = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const response = await this.discussionService.getDiscussionsBySearching(req.body);
       return res.status(200).send({ success: true, data: response });
@@ -72,4 +72,23 @@ export class DiscussionController {
     }
   }
 
+  likeDiscussion =  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const response = await this.discussionService.likeDiscussion(req.body.id);
+      return res.status(200).send({ success: true, data: response });
+    } catch (err: any) {
+      console.error(err);
+      return res.status(err.err_code ?? 500).send({ success: false, error: err.message });
+    }
+  }
+
+  incrementViewCountInDiscussion =  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const response = await this.discussionService.incrementViewCountInDiscussion(req.body.id);
+      return res.status(200).send({ success: true, data: response });
+    } catch (err: any) {
+      console.error(err);
+      return res.status(err.err_code ?? 500).send({ success: false, error: err.message });
+    }
+  }
 }

@@ -68,4 +68,61 @@ export class DiscussionRepository {
       }
     ]).exec();
   }
+
+  likeDiscussion = async (discussionId: any) => {
+    await Discussion.findByIdAndUpdate(discussionId, {
+      $inc: { likesCount: 1 }
+    })
+    const response =  await Discussion.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(discussionId) }
+      },
+      {
+        $lookup: {
+          from: 'media',
+          as: 'media',
+          foreignField: '_id',
+          localField: 'media'
+        }
+      },
+      {
+        $lookup: {
+          from: 'tag',
+          as: 'tags',
+          foreignField: '_id',
+          localField: 'tag'
+        }
+      }
+    ]).exec();
+    return response[0];
+  }
+
+  incrementViewCountInDiscussion = async (discussionId: any) => {
+    await Discussion.findByIdAndUpdate(discussionId, {
+      $inc: { viewCount: 1 }
+    });
+
+    const response = await Discussion.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(discussionId) }
+      },
+      {
+        $lookup: {
+          from: 'media',
+          as: 'media',
+          foreignField: '_id',
+          localField: 'media'
+        }
+      },
+      {
+        $lookup: {
+          from: 'tag',
+          as: 'tags',
+          foreignField: '_id',
+          localField: 'tag'
+        }
+      }
+    ]).exec();
+    return response[0];
+  }
 }
