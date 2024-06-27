@@ -2,8 +2,9 @@ import mongoose, { Document } from 'mongoose';
 
 const schema = new mongoose.Schema({
   name: { 
-    type: String, 
-    trim: true 
+    type: String,
+    trim: true,
+    unique: true
   },
   timeUsed: { 
     type: Number, 
